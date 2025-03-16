@@ -21,7 +21,7 @@ def start_client(code):
                 data = client_socket.recv(1024)  # Receive the response from the server
                 print(f"Server response: {data.decode()}")
     except OSError as e:
-        print(f"Error: {e}, probably the code is incorrect, try again")
+        print(f"Error: {e}, probably the code is incorrect or you are not on the same network, try again")
         start_client(input("Enter your code: "))
         
     print("Connection terminated.")
