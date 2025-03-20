@@ -16,33 +16,40 @@ class home(App):
         btnHost = Button(
                 text = 'host',
                 font_size = "20sp",
-                background_color = (256, 0 ,100 ,1),
-                size = (32, 32),)
-        btnClient = BoxLayout(orientation = 'vertical',)
+                background_color = (256, 0, 100, 1),
+                size = (32, 32))
+                
+        btnClient = BoxLayout(orientation = 'vertical')
 
-        code = TextInput(hint_text = 'connect code', multiline = False)
+        self.code_input = TextInput(hint_text = 'connect code', multiline = False)
         
-        btnClient.add_widget(Button(
+        connect_button = Button(
                 text = 'client',
                 font_size = "20sp",
-                background_color = (256, 0 ,100 ,1),
-                size = (32, 32),
-                on_press = self.start_client(code = code.text)))
+                background_color = (256, 0, 100, 1),
+                size = (32, 32))
         
-        btnClient.add_widget(code)
+        # Bind the button press to the callback function
+        connect_button.bind(on_press=self.on_connect_press)
         
-
+        btnClient.add_widget(connect_button)
+        btnClient.add_widget(self.code_input)
+        
         buttonsBox.add_widget(btnHost)
         buttonsBox.add_widget(btnClient)
 
-        homeText = Label(text = "you want to connetct to a server (client) or be one (host)?")
+        homeText = Label(text = "you want to connect to a server (client) or be one (host)?")
 
         mainBox.add_widget(homeText)
         mainBox.add_widget(buttonsBox)
 
         return mainBox
 
-    def start_client(self, code):
-        thread = threading.Thread(target=start_client, args=(code))
+    def on_connect_press(self, instance):
+        # This function will be called when the client button is pressed
+        code = self.code_input.text
+        thread = threading.Thread(target=start_client, args=(code,))
+        thread.daemon = True
+        thread.start()
 
 home().run()

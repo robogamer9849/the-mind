@@ -13,12 +13,12 @@ def start_client(code):
             print(f"{data.decode()}")
             while True:
                 # message = input("Enter your message (type 'exit' to quit): ")
-                if message.lower() == 'exit':
-                    print("Closing the connection...")
-                    break
-                if message == 'show':
-                    client_socket.sendall("I showed".encode())
-                data = client_socket.recv(1024)  # Receive the response from the server
+                # if message.lower() == 'exit':
+                #     print("Closing the connection...")
+                #     break
+                # if message == 'show':
+                #     client_socket.sendall("I showed".encode())
+                # data = client_socket.recv(1024)  # Receive the response from the server
                 print(f"Server response: {data.decode()}")
     except OSError as e:
         print(f"Error: {e}, probably the code is incorrect or you are not on the same network, try again")
