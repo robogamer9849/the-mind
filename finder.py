@@ -4,7 +4,7 @@ def find_code():
     s.connect(("8.8.8.8", 80))
     ip = s.getsockname()[0]
     s.close()
-    return ip.split('.')[3]
+    return ip
 
 
 

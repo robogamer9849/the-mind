@@ -3,7 +3,7 @@ import socket
 # Client IP and Port configuration
 
 def start_client(code):
-    HOST = f'192.168.0.{code}'  # Server's IP address (localhost)
+    HOST = f'{code}'  # Server's IP address (localhost)
     PORT = 6000
     try:        # Port the server is listening on# Start the client
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as client_socket:
