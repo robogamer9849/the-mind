@@ -32,7 +32,7 @@ def handle_client(conn, addr, num):
             print(f"Received from {addr}: {data.decode()}")
 
             if data.decode() == 'give me':
-                conn.sendall(f"yor number: {num}\n".encode())
+                conn.sendall(f"{num}".encode())
 
             elif data.decode() == 'I showed':
                 print(nums)
