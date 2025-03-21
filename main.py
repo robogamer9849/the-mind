@@ -1,4 +1,4 @@
-from client import *
+# from client import *
 
 import kivy 
 from kivy.app import App 
