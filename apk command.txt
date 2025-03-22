@@ -1,0 +1,10 @@
+p4a apk --private /home/taha/Documents/coding/python/me/themind \
+       --package=org.taha.themind \
+       --name "the mind" \
+       --version 0.1 \
+       --bootstrap=sdl2 \
+       --requirements=kivy,socket,threrandomading,random, \
+       --arch armeabi-v7a \
+       --ndk-api=21 \
+       --android-api 23 \
+       --permission INTERNET

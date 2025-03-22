@@ -120,7 +120,7 @@ class HomeScreen(Screen):
         buttonsBox.add_widget(clientBox)
 
         self.homeText = Label(text="Do you want to host (server) or connect as a client?",
-                              font_size="18sp")
+                            font_size="18sp")
 
         mainBox.add_widget(self.homeText)
         mainBox.add_widget(buttonsBox)
@@ -246,8 +246,8 @@ class GameScreen(Screen):
         """Set connection details and display IP"""
         self.host = host
         self.port = port
-        self.ipLable = Label(text=f"code:{self.host}")
-        self.layout.add_widget(self.ipLable)
+        self.ipLabel = Label(text=f"code:{self.host}")
+        self.layout.add_widget(self.ipLabel)
 
     def on_show_press(self, instance):
         """Handle show button press - reveal number to server"""
