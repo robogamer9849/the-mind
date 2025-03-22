@@ -1,0 +1,57 @@
+# Check configuration tokens
+# WARNING: Config token app android.sdk is deprecated and ignored, but you set value 20
+# Ensure build layout
+# Check configuration tokens
+# Read available permissions from api-versions.xml
+# Preparing build
+# Check requirements for android
+# Run 'dpkg --version'
+# Cwd None
+# Search for Git (git)
+#  -> found at /usr/bin/git
+# Search for Cython (cython)
+#  -> found at /home/taha/.local/bin/cython
+# Search for Java compiler (javac)
+#  -> found at /usr/lib/jvm/java-21-openjdk/bin/javac
+# Search for Java keytool (keytool)
+#  -> found at /usr/lib/jvm/java-21-openjdk/bin/keytool
+# Install platform
+# Run 'git config --get remote.origin.url'
+# Cwd /home/taha/Documents/coding/python/me/themind/.buildozer/android/platform/python-for-android
+https://github.com/kivy/python-for-android.git
+# Run 'git branch -vv'
+# Cwd /home/taha/Documents/coding/python/me/themind/.buildozer/android/platform/python-for-android
+* master 957a3e5f [origin/master] Merge pull request #2959 from kivy/release-2024.01.21
+# Run '/usr/bin/python -m pip install -q --user \'appdirs\' \'colorama>=0.3.3\' \'jinja2\' \'sh>=1.10, <2.0; sys_platform!="win32"\' \'build\' \'toml\' \'packaging\' \'setuptools\' \'--break-system-packages\''
+# Cwd None
+# Apache ANT found at /home/taha/.buildozer/android/platform/apache-ant-1.9.4
+# Android SDK found at /home/taha/.buildozer/android/platform/android-sdk
+# Recommended android's NDK version by p4a is: 25b
+# Android NDK found at /home/taha/.buildozer/android/platform/android-ndk-r25b
+# Read available permissions from api-versions.xml
+# Run '/usr/bin/python -m pythonforandroid.toolchain aab -h --color=always --storage-dir="/home/taha/Documents/coding/python/me/themind/.buildozer/android/platform/build-arm64-v8a_armeabi-v7a" --ndk-api=21 --ignore-setup-py --debug'
+# Cwd /home/taha/Documents/coding/python/me/themind/.buildozer/android/platform/python-for-android
+# Check application requirements
+# Compile platform
+# Run '/usr/bin/python -m pythonforandroid.toolchain create --dist_name=the.mind --bootstrap=sdl2 --requirements=python3,kivy --arch arm64-v8a --arch armeabi-v7a --copy-libs --color=always --storage-dir="/home/taha/Documents/coding/python/me/themind/.buildozer/android/platform/build-arm64-v8a_armeabi-v7a" --ndk-api=21 --ignore-setup-py --debug'
+# Cwd /home/taha/Documents/coding/python/me/themind/.buildozer/android/platform/python-for-android
+# Build the application #13
+# Copy application source from /home/taha/Documents/coding/python/me/themind
+# Create directory /home/taha/Documents/coding/python/me/themind/.buildozer/android/app
+# Copy /home/taha/Documents/coding/python/me/themind/buildozer.log
+# Copy /home/taha/Documents/coding/python/me/themind/main.py
+# Copy /home/taha/Documents/coding/python/me/themind/client.py
+# Copy /home/taha/Documents/coding/python/me/themind/finder.py
+# Copy /home/taha/Documents/coding/python/me/themind/open port.py
+# Copy /home/taha/Documents/coding/python/me/themind/buildozer.spec
+# Copy /home/taha/Documents/coding/python/me/themind/server.py
+# Package the application
+# project.properties updated
+# Run '/usr/bin/python -m pythonforandroid.toolchain apk --bootstrap sdl2 --dist_name the.mind --name \'the mind\' --version 0.1 --package org.taha.mind.the.mind --minsdk 21 --ndk-api 21 --private /home/taha/Documents/coding/python/me/themind/.buildozer/android/app --permission INTERNET --android-entrypoint org.kivy.android.PythonActivity --android-apptheme "@android:style/Theme.NoTitleBar" --orientation landscape --window --copy-libs --arch arm64-v8a --arch armeabi-v7a --color=always --storage-dir="/home/taha/Documents/coding/python/me/themind/.buildozer/android/platform/build-arm64-v8a_armeabi-v7a" --ndk-api=21 --ignore-setup-py --debug'
+# Cwd /home/taha/Documents/coding/python/me/themind/.buildozer/android/platform/python-for-android
+Compiling '/home/taha/Documents/coding/python/me/themind/.buildozer/android/app/main.py'...
+Compiling '/home/taha/Documents/coding/python/me/themind/.buildozer/android/app/client.py'...
+Compiling '/home/taha/Documents/coding/python/me/themind/.buildozer/android/app/finder.py'...
+Compiling '/home/taha/Documents/coding/python/me/themind/.buildozer/android/app/open port.py'...
+Compiling '/home/taha/Documents/coding/python/me/themind/.buildozer/android/app/sitecustomize.py'...
+Compiling '/home/taha/Documents/coding/python/me/themind/.buildozer/android/app/server.py'...
