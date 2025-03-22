@@ -6,12 +6,8 @@ def find_code():
     s.close()
     return ip
 
-def get_min() :
-    min_num = 100
-    for i in nums:
-        if i + 1 < min_num:
-            min_num = i
-    return min_num
+def get_min(numlist) :
+    return min(numlist) if numlist else None
 
 
 

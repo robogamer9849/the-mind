@@ -34,7 +34,7 @@ def handle_client(conn, addr, num):
                 # Remove the number so that only the first "I showed" counts.
                 if num in nums:
                     nums.remove(num)
-                current_min = get_min()
+                current_min = get_min(nums)
                 print("Remaining numbers:", nums, "Current min:", current_min)
                 # If no numbers remain (or this was the smallest), then this client wins.
                 if current_min is None or num < current_min:
@@ -60,13 +60,10 @@ def start_server():
         
         while True:
             conn, addr = server_socket.accept()  # Accept a client connection
-            thread = threading.Thread(target=handle_client, args=(conn, addr, random.randint(1, 100)))
+            thread = threading.Thread(target=handle_client, args=(conn, addr, random.randint(1, 1000000)))
             thread.start()
             print(f"Active connections: {threading.active_count() - 1}")
 
-def get_min():
-    """Return the smallest number in nums if available."""
-    return min(nums) if nums else None
 
 # --- Kivy UI Code ---
 
@@ -177,14 +174,14 @@ class ServerScreen(Screen):
     def auto_connect_client(self, dt):
         try:
             with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as client_socket:
-                client_socket.connect(("127.0.0.1", PORT))
+                client_socket.connect((f"{find_code()}", PORT))
                 client_socket.sendall("give me".encode())
                 data = client_socket.recv(1024)
                 number = data.decode()
                 print("Auto-connected; received number:", number)
             game_screen = self.manager.get_screen('game')
             game_screen.set_number(number)
-            game_screen.set_connection("127.0.0.1", PORT)
+            game_screen.set_connection(f"{find_code()}", PORT)
             self.manager.current = 'game'
         except Exception as e:
             self.info_label.text = f"Auto-connect failed: {e}"
@@ -201,6 +198,7 @@ class GameScreen(Screen):
         self.port = None
 
         self.layout = BoxLayout(orientation='vertical')
+        self.layout.clear_widgets()
         self.number_label = Label(text="Your number: ", font_size="30sp")
         self.status_label = Label(text="Game in progress...", font_size="20sp")
         self.show_button = Button(
@@ -220,7 +218,7 @@ class GameScreen(Screen):
 
         self.layout.add_widget(self.number_label)
         self.layout.add_widget(self.status_label)
-        self.layout.add_widget(self.show_button)
+        # self.layout.add_widget(self.show_button)
         self.layout.add_widget(self.back_button)
         self.add_widget(self.layout)
 
@@ -231,6 +229,9 @@ class GameScreen(Screen):
     def set_connection(self, host, port):
         self.host = host
         self.port = port
+        self.ipLable = Label(text=f"code:{self.host}")
+        self.layout.add_widget(self.ipLable)
+
 
     def on_show_press(self, instance):
         try:
