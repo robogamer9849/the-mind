@@ -35,7 +35,7 @@ https://github.com/kivy/python-for-android.git
 # Compile platform
 # Run '/usr/bin/python -m pythonforandroid.toolchain create --dist_name=the.mind --bootstrap=sdl2 --requirements=python3,kivy --arch arm64-v8a --arch armeabi-v7a --copy-libs --color=always --storage-dir="/home/taha/Documents/coding/python/me/themind/.buildozer/android/platform/build-arm64-v8a_armeabi-v7a" --ndk-api=21 --ignore-setup-py --debug'
 # Cwd /home/taha/Documents/coding/python/me/themind/.buildozer/android/platform/python-for-android
-# Build the application #13
+# Build the application #14
 # Copy application source from /home/taha/Documents/coding/python/me/themind
 # Create directory /home/taha/Documents/coding/python/me/themind/.buildozer/android/app
 # Copy /home/taha/Documents/coding/python/me/themind/buildozer.log
@@ -55,3 +55,92 @@ Compiling '/home/taha/Documents/coding/python/me/themind/.buildozer/android/app/
 Compiling '/home/taha/Documents/coding/python/me/themind/.buildozer/android/app/open port.py'...
 Compiling '/home/taha/Documents/coding/python/me/themind/.buildozer/android/app/sitecustomize.py'...
 Compiling '/home/taha/Documents/coding/python/me/themind/.buildozer/android/app/server.py'...
+No setup.py/pyproject.toml used, copying full private data into .apk.
+Applying Java source code patches...
+Applying patch: src/patches/SDLActivity.java.patch
+Warning: failed to apply patch (exit code 1), assuming it is already applied:  src/patches/SDLActivity.java.patch
+# Command failed: /usr/bin/python -m pythonforandroid.toolchain apk --bootstrap sdl2 --dist_name the.mind --name 'the mind' --version 0.1 --package org.taha.mind.the.mind --minsdk 21 --ndk-api 21 --private /home/taha/Documents/coding/python/me/themind/.buildozer/android/app --permission INTERNET --android-entrypoint org.kivy.android.PythonActivity --android-apptheme "@android:style/Theme.NoTitleBar" --orientation landscape --window --copy-libs --arch arm64-v8a --arch armeabi-v7a --color=always --storage-dir="/home/taha/Documents/coding/python/me/themind/.buildozer/android/platform/build-arm64-v8a_armeabi-v7a" --ndk-api=21 --ignore-setup-py --debug
+# ENVIRONMENT:
+#     SHELL = '/bin/zsh'
+#     HYPRLAND_CMD = 'Hyprland'
+#     XDG_BACKEND = 'wayland'
+#     CLUTTER_BACKEND = 'wayland'
+#     QT_WAYLAND_DISABLE_WINDOWDECORATION = '1'
+#     LC_ADDRESS = 'en_US.UTF-8'
+#     LC_NAME = 'en_US.UTF-8'
+#     DESKTOP_SESSION = 'hyprland'
+#     LC_MONETARY = 'en_US.UTF-8'
+#     EDITOR = 'nano'
+#     XDG_SEAT = 'seat0'
+#     PWD = '/home/taha/Documents/coding/python/me/themind'
+#     LOGNAME = 'taha'
+#     XDG_SESSION_DESKTOP = 'Hyprland'
+#     QT_QPA_PLATFORMTHEME = 'qt6ct'
+#     XDG_SESSION_TYPE = 'wayland'
+#     MOTD_SHOWN = 'pam'
+#     GDM_LANG = 'en_US.UTF-8'
+#     HOME = '/home/taha'
+#     USERNAME = 'taha'
+#     LC_PAPER = 'en_US.UTF-8'
+#     LANG = 'en_US.UTF-8'
+#     _JAVA_AWT_WM_NONREPARENTING = '1'
+#     XDG_CURRENT_DESKTOP = 'Hyprland'
+#     WAYLAND_DISPLAY = 'wayland-1'
+#     QT_QPA_PLATFORM = 'wayland;xcb'
+#     XDG_SESSION_CLASS = 'user'
+#     LC_IDENTIFICATION = 'en_US.UTF-8'
+#     USER = 'taha'
+#     HYPRLAND_INSTANCE_SIGNATURE = '0bd541f2fd902dbfa04c3ea2ccf679395e316887_1742655473_912802107'
+#     DISPLAY = ':0'
+#     SHLVL = '1'
+#     MOZ_ENABLE_WAYLAND = '1'
+#     LC_TELEPHONE = 'en_US.UTF-8'
+#     LC_MEASUREMENT = 'en_US.UTF-8'
+#     XDG_VTNR = '2'
+#     XDG_SESSION_ID = '7'
+#     XDG_RUNTIME_DIR = '/run/user/1000'
+#     LC_TIME = 'en_US.UTF-8'
+#     QT_AUTO_SCREEN_SCALE_FACTOR = '1'
+#     XDG_DATA_DIRS = '/home/taha/.local/share/flatpak/exports/share:/var/lib/flatpak/exports/share:/usr/local/share/:/usr/share/:/var/lib/snapd/desktop'
+#     GDK_BACKEND = 'wayland'
+#     BROWSER = 'firefox'
+#     PATH = '/home/taha/.buildozer/android/platform/apache-ant-1.9.4/bin:/usr/local/bin:/usr/bin:/var/lib/snapd/snap/bin:/home/taha/.local/bin'
+#     GDK_SCALE = '1'
+#     GDMSESSION = 'hyprland'
+#     DBUS_SESSION_BUS_ADDRESS = 'unix:path=/run/user/1000/bus'
+#     MAIL = '/var/spool/mail/taha'
+#     QT_SCALE_FACTOR = '1'
+#     LC_NUMERIC = 'en_US.UTF-8'
+#     CHROME_DESKTOP = 'code-oss.desktop'
+#     ORIGINAL_XDG_CURRENT_DESKTOP = 'Hyprland'
+#     NO_AT_BRIDGE = '1'
+#     TERM_PROGRAM = 'vscode'
+#     TERM_PROGRAM_VERSION = '1.95.1'
+#     COLORTERM = 'truecolor'
+#     GIT_ASKPASS = '/usr/lib/code/extensions/git/dist/askpass.sh'
+#     VSCODE_GIT_ASKPASS_NODE = '/usr/lib/electron32/electron'
+#     VSCODE_GIT_ASKPASS_EXTRA_ARGS = ''
+#     VSCODE_GIT_ASKPASS_MAIN = '/usr/lib/code/extensions/git/dist/askpass-main.js'
+#     VSCODE_GIT_IPC_HANDLE = '/run/user/1000/vscode-git-15f4fe16dd.sock'
+#     VSCODE_INJECTION = '1'
+#     ZDOTDIR = '/home/taha'
+#     USER_ZDOTDIR = '/home/taha'
+#     TERM = 'xterm-256color'
+#     OLDPWD = '/home/taha/Documents/coding/python/me/themind'
+#     ZSH = '/home/taha/.oh-my-zsh'
+#     PAGER = 'less'
+#     LESS = '-R'
+#     LSCOLORS = 'Gxfxcxdxbxegedabagacad'
+#     LS_COLORS = 'rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:mi=00:su=37;41:sg=30;43:ca=00:tw=30;42:ow=34;42:st=37;44:ex=01;32:*.7z=01;31:*.ace=01;31:*.alz=01;31:*.apk=01;31:*.arc=01;31:*.arj=01;31:*.bz=01;31:*.bz2=01;31:*.cab=01;31:*.cpio=01;31:*.crate=01;31:*.deb=01;31:*.drpm=01;31:*.dwm=01;31:*.dz=01;31:*.ear=01;31:*.egg=01;31:*.esd=01;31:*.gz=01;31:*.jar=01;31:*.lha=01;31:*.lrz=01;31:*.lz=01;31:*.lz4=01;31:*.lzh=01;31:*.lzma=01;31:*.lzo=01;31:*.pyz=01;31:*.rar=01;31:*.rpm=01;31:*.rz=01;31:*.sar=01;31:*.swm=01;31:*.t7z=01;31:*.tar=01;31:*.taz=01;31:*.tbz=01;31:*.tbz2=01;31:*.tgz=01;31:*.tlz=01;31:*.txz=01;31:*.tz=01;31:*.tzo=01;31:*.tzst=01;31:*.udeb=01;31:*.war=01;31:*.whl=01;31:*.wim=01;31:*.xz=01;31:*.z=01;31:*.zip=01;31:*.zoo=01;31:*.zst=01;31:*.avif=01;35:*.jpg=01;35:*.jpeg=01;35:*.mjpg=01;35:*.mjpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.svg=01;35:*.svgz=01;35:*.mng=01;35:*.pcx=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.m2v=01;35:*.mkv=01;35:*.webm=01;35:*.webp=01;35:*.ogm=01;35:*.mp4=01;35:*.m4v=01;35:*.mp4v=01;35:*.vob=01;35:*.qt=01;35:*.nuv=01;35:*.wmv=01;35:*.asf=01;35:*.rm=01;35:*.rmvb=01;35:*.flc=01;35:*.avi=01;35:*.fli=01;35:*.flv=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.yuv=01;35:*.cgm=01;35:*.emf=01;35:*.ogv=01;35:*.ogx=01;35:*.aac=00;36:*.au=00;36:*.flac=00;36:*.m4a=00;36:*.mid=00;36:*.midi=00;36:*.mka=00;36:*.mp3=00;36:*.mpc=00;36:*.ogg=00;36:*.ra=00;36:*.wav=00;36:*.oga=00;36:*.opus=00;36:*.spx=00;36:*.xspf=00;36:*~=00;90:*#=00;90:*.bak=00;90:*.crdownload=00;90:*.dpkg-dist=00;90:*.dpkg-new=00;90:*.dpkg-old=00;90:*.dpkg-tmp=00;90:*.old=00;90:*.orig=00;90:*.part=00;90:*.rej=00;90:*.rpmnew=00;90:*.rpmorig=00;90:*.rpmsave=00;90:*.swp=00;90:*.tmp=00;90:*.ucf-dist=00;90:*.ucf-new=00;90:*.ucf-old=00;90:'
+#     _ = '/usr/bin/buildozer'
+#     PACKAGES_PATH = '/home/taha/.buildozer/android/packages'
+#     ANDROIDSDK = '/home/taha/.buildozer/android/platform/android-sdk'
+#     ANDROIDNDK = '/home/taha/.buildozer/android/platform/android-ndk-r25b'
+#     ANDROIDAPI = '27'
+#     ANDROIDMINAPI = '21'
+# 
+# Buildozer failed to execute the last command
+# The error might be hidden in the log above this error
+# Please read the full log, and search for it before
+# raising an issue with buildozer itself.
+# In case of a bug report, please add a full log with log_level = 2

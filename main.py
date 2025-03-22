@@ -1,23 +1,31 @@
 import socket
 import threading
 import random
-from finder import *  # ensure finder.py is available
+from finder import *
 from kivy.clock import Clock
 
 # Global list to hold client numbers
 nums = []
 
 # Server IP and Port configuration
-HOST = '0.0.0.0'
-PORT = 6000
+HOST = '0.0.0.0'  # Listen on all available network interfaces
+PORT = 6000       # Port number for the server
 
 # --- Server Functions ---
 
 def handle_client(conn, addr, num):
+    """
+    Handle individual client connections and game logic.
+    Args:
+        conn: Socket connection object
+        addr: Client address
+        num: Random number assigned to client
+    """
     print(f"Connection established with {addr}.")
     nums.append(num)
     while True:
         try:
+            # Receive data from client
             data = conn.recv(1024)
             if not data:
                 if num in nums:
@@ -27,16 +35,18 @@ def handle_client(conn, addr, num):
             message = data.decode()
             print(f"Received from {addr}: {message}")
 
+            # Handle 'give me' request - send client their number
             if message == 'give me':
                 conn.sendall(f"{num}".encode())
 
+            # Handle 'I showed' request - determine if client wins
             elif message == 'I showed':
-                # Remove the number so that only the first "I showed" counts.
+                # Remove the number so that only the first "I showed" counts
                 if num in nums:
                     nums.remove(num)
                 current_min = get_min(nums)
                 print("Remaining numbers:", nums, "Current min:", current_min)
-                # If no numbers remain (or this was the smallest), then this client wins.
+                # If no numbers remain (or this was the smallest), then this client wins
                 if current_min is None or num < current_min:
                     conn.sendall("you are right\n".encode())
                 else:
@@ -51,6 +61,7 @@ def handle_client(conn, addr, num):
     print(f"Connection with {addr} closed.")
 
 def start_server():
+    """Initialize and start the game server"""
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as server_socket:
         server_socket.bind((HOST, PORT))
         server_socket.listen()
@@ -60,6 +71,7 @@ def start_server():
         
         while True:
             conn, addr = server_socket.accept()  # Accept a client connection
+            # Create new thread for each client with random number
             thread = threading.Thread(target=handle_client, args=(conn, addr, random.randint(1, 1000000)))
             thread.start()
             print(f"Active connections: {threading.active_count() - 1}")
@@ -75,8 +87,8 @@ from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.textinput import TextInput
 from kivy.uix.screenmanager import ScreenManager, Screen
 
-# Home Screen: choose between host (server) or client
 class HomeScreen(Screen):
+    """Home screen with options to host or join game"""
     def __init__(self, **kwargs):
         super(HomeScreen, self).__init__(**kwargs)
         mainBox = BoxLayout(orientation='vertical')
@@ -116,9 +128,11 @@ class HomeScreen(Screen):
         self.add_widget(mainBox)
 
     def go_to_server(self, instance):
+        """Navigate to server screen"""
         self.manager.current = 'server'
 
     def on_connect_press(self, instance):
+        """Handle client connection attempt"""
         # Get the code as host (IP address) for client connection
         host = self.code_input.text.strip()
         try:
@@ -139,8 +153,8 @@ class HomeScreen(Screen):
             print(f"Error: {e}. Check the IP or network.")
             self.homeText.text = f"Error: {e}. Check the IP or network."
 
-# Server Screen: start and monitor the server and auto-connect client on same device
 class ServerScreen(Screen):
+    """Screen for server management and auto-client connection"""
     def __init__(self, **kwargs):
         super(ServerScreen, self).__init__(**kwargs)
         self.server_thread = None
@@ -159,19 +173,19 @@ class ServerScreen(Screen):
         self.add_widget(layout)
 
     def start_server_thread(self, instance):
-        # Get the connect code (for example, from finder.find_code())
+        """Start the server in a separate thread"""
         code = find_code()
         self.info_label.text = f"Server started!\nConnect code: {code}\nListening on port {PORT}"
-        # Start the server in a separate thread if not already running.
         if not self.server_thread or not self.server_thread.is_alive():
             self.server_thread = threading.Thread(target=start_server, daemon=True)
             self.server_thread.start()
         else:
             self.info_label.text = "Server already running."
-        # Auto-connect as client after a short delay (using localhost)
+        # Auto-connect as client after a short delay
         Clock.schedule_once(self.auto_connect_client, 1)
 
     def auto_connect_client(self, dt):
+        """Automatically connect to local server as client"""
         try:
             with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as client_socket:
                 client_socket.connect((f"{find_code()}", PORT))
@@ -187,10 +201,11 @@ class ServerScreen(Screen):
             self.info_label.text = f"Auto-connect failed: {e}"
 
     def go_back(self, instance):
+        """Return to home screen"""
         self.manager.current = 'home'
 
-# Game Screen: used for the gameplay after connecting as a client
 class GameScreen(Screen):
+    """Screen for gameplay after connection is established"""
     def __init__(self, **kwargs):
         super(GameScreen, self).__init__(**kwargs)
         self.number = None
@@ -223,17 +238,19 @@ class GameScreen(Screen):
         self.add_widget(self.layout)
 
     def set_number(self, number):
+        """Set the player's number"""
         self.number = number
         self.number_label.text = f"Your number: {self.number}"
 
     def set_connection(self, host, port):
+        """Set connection details and display IP"""
         self.host = host
         self.port = port
         self.ipLable = Label(text=f"code:{self.host}")
         self.layout.add_widget(self.ipLable)
 
-
     def on_show_press(self, instance):
+        """Handle show button press - reveal number to server"""
         try:
             with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as client_socket:
                 client_socket.connect((self.host, self.port))
@@ -245,9 +262,11 @@ class GameScreen(Screen):
             self.status_label.text = f"Error: {e}"
 
     def go_back(self, instance):
+        """Return to home screen"""
         self.manager.current = 'home'
 
 class HomeApp(App):
+    """Main application class"""
     def build(self):
         # Create the screen manager and add screens
         sm = ScreenManager()
