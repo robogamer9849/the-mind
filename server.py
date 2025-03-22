@@ -7,12 +7,7 @@ from finder import *
 
 nums = []
 
-def get_min() :
-    min_num = 100
-    for i in nums:
-        if i + 1 < min_num:
-            min_num = i
-    return min_num
+
 
 
 # Server IP and Port configuration
