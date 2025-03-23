@@ -8,3 +8,90 @@ p4a apk --private /home/taha/Documents/coding/python/me/themind \
        --ndk-api=21 \
        --android-api 23 \
        --permission INTERNET
+
+
+
+build.gradle:  /home/taha/.local/share/python-for-android/dists/unnamed_dist_8/build.gradle
+// Top-level build file where you can add configuration options common to all sub-projects/modules.
+buildscript {
+    repositories {
+        google()
+        jcenter()
+        mavenCentral()
+        mavenLocal()
+        gradlePluginPortal()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:8.4.0'
+    }
+}
+
+allprojects {
+    repositories {
+        google()
+        jcenter()
+        mavenCentral()
+        mavenLocal()
+        gradlePluginPortal()
+    }
+}
+
+
+apply plugin: 'com.android.application'
+
+
+android {
+    namespace 'org.taha.themind'
+    compileSdkVersion 23
+    buildToolsVersion '36.0.0'
+    defaultConfig {
+        minSdkVersion 21
+        targetSdkVersion 23
+        versionCode 10211
+        versionName '0.1'
+        manifestPlaceholders = [:]
+    }
+
+	
+	packagingOptions {
+        jniLibs {
+            useLegacyPackaging = true
+        }
+        doNotStrip '**/*.so'
+        
+	}
+	
+
+	
+
+    
+
+    buildTypes {
+        debug {
+        }
+        release {
+            
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    sourceSets {
+        main {
+            jniLibs.srcDir 'libs'
+            java {}
+        }
+    }
+
+    aaptOptions {
+        noCompress "tflite"
+    }
+
+}
+
+dependencies {
+    
+}

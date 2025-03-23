@@ -245,7 +245,7 @@ class GameScreen(Screen):
     def set_connection(self, host, port):
         """Set connection details and display IP"""
         self.host = host
-        self.port = port
+        self.port = ports
         self.ipLabel = Label(text=f"code:{self.host}")
         self.layout.add_widget(self.ipLabel)
 
