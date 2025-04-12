@@ -1,279 +1,153 @@
-import socket
-import threading
-import random
-from finder import *
+from kivy.app import App
+from kivy.uix.screenmanager import ScreenManager, Screen
+from kivy.uix.boxlayout import BoxLayout
+from kivy.uix.label import Label
+from kivy.uix.button import Button
+from kivy.uix.textinput import TextInput
+from kivy.uix.slider import Slider
 from kivy.clock import Clock
+import threading
+import socket
+import random
 
-# Global list to hold client numbers
-nums = []
+PORT = 6000
+HOST = '0.0.0.0'
+max_number = 100
+nums = {}
 
-# Server IP and Port configuration
-HOST = '0.0.0.0'  # Listen on all available network interfaces
-PORT = 6000       # Port number for the server
+HELP_TEXT = "🎮 THE MIND - WHERE TELEPATHY MEETS FUN! 🎮\n..."
 
-# --- Server Functions ---
+
+# --- Server Logic (same as in your Toga code) ---
+
+def find_code():
+    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    s.connect(("8.8.8.8", 80))
+    ip = s.getsockname()[0]
+    s.close()
+    return ip
 
 def handle_client(conn, addr, num):
-    """
-    Handle individual client connections and game logic.
-    Args:
-        conn: Socket connection object
-        addr: Client address
-        num: Random number assigned to client
-    """
-    print(f"Connection established with {addr}.")
-    nums.append(num)
-    while True:
-        try:
-            # Receive data from client
+    print(f"Connection with {addr}")
+    try:
+        while True:
             data = conn.recv(1024)
             if not data:
-                if num in nums:
-                    nums.remove(num)
                 break
-
             message = data.decode()
-            print(f"Received from {addr}: {message}")
-
-            # Handle 'give me' request - send client their number
             if message == 'give me':
-                conn.sendall(f"{num}".encode())
-
-            # Handle 'I showed' request - determine if client wins
+                if addr[0] not in nums:
+                    nums[addr[0]] = num
+                conn.sendall(f"{nums[addr[0]]}".encode())
             elif message == 'I showed':
-                # Remove the number so that only the first "I showed" counts
-                if num in nums:
-                    nums.remove(num)
-                current_min = get_min(nums)
-                print("Remaining numbers:", nums, "Current min:", current_min)
-                # If no numbers remain (or this was the smallest), then this client wins
-                if current_min is None or num < current_min:
-                    conn.sendall("you are right\n".encode())
+                min_num = min(nums.values())
+                if nums[addr[0]] == min_num:
+                    conn.sendall("You won!".encode())
+                    nums.pop(addr[0])
                 else:
-                    conn.sendall("you lose\n".encode())
-
-        except ConnectionResetError:
-            print(f"Client {addr} has disconnected.")
-            if num in nums:
-                nums.remove(num)
-            break
-    conn.close()
-    print(f"Connection with {addr} closed.")
+                    conn.sendall("You lost!".encode())
+                    nums.clear()
+    except Exception as e:
+        print("Client error:", e)
+    finally:
+        conn.close()
 
 def start_server():
-    """Initialize and start the game server"""
+    print("Server starting...")
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as server_socket:
         server_socket.bind((HOST, PORT))
         server_socket.listen()
-        print(f"Server listening on {HOST}:{PORT}...")
-        code = find_code()
-        print("Connect code:", code)
-        
         while True:
-            conn, addr = server_socket.accept()  # Accept a client connection
-            # Create new thread for each client with random number
-            thread = threading.Thread(target=handle_client, args=(conn, addr, random.randint(1, 1000000)))
-            thread.start()
-            print(f"Active connections: {threading.active_count() - 1}")
+            conn, addr = server_socket.accept()
+            threading.Thread(target=handle_client, args=(conn, addr, random.randint(1, max_number)), daemon=True).start()
 
 
-# --- Kivy UI Code ---
-
-import kivy 
-from kivy.app import App 
-from kivy.uix.label import Label 
-from kivy.uix.button import Button
-from kivy.uix.boxlayout import BoxLayout
-from kivy.uix.textinput import TextInput
-from kivy.uix.screenmanager import ScreenManager, Screen
+# --- Kivy Screens ---
 
 class HomeScreen(Screen):
-    """Home screen with options to host or join game"""
     def __init__(self, **kwargs):
-        super(HomeScreen, self).__init__(**kwargs)
-        mainBox = BoxLayout(orientation='vertical')
-        buttonsBox = BoxLayout(orientation='horizontal')
+        super().__init__(**kwargs)
+        layout = BoxLayout(orientation='vertical', padding=20, spacing=10)
+        layout.add_widget(Label(text="🎮 Ready to play?\nLet's go! 🎲", font_size='24sp'))
 
-        # Host button navigates to ServerScreen
-        btnHost = Button(
-            text='host',
-            font_size="20sp",
-            background_color=(1, 0, 0, 1),
-            size_hint=(0.5, 1)
-        )
-        btnHost.bind(on_press=self.go_to_server)
+        self.code_input = TextInput(hint_text="Enter host IP")
+        connect_btn = Button(text="Connect", on_press=self.connect_to_server)
+        host_btn = Button(text="Host Game", on_press=self.start_host)
 
-        # Client side elements
-        clientBox = BoxLayout(orientation='vertical')
-        self.code_input = TextInput(hint_text='connect code (IP)', multiline=False)
-        connect_button = Button(
-            text='client',
-            font_size="20sp",
-            background_color=(0, 1, 0, 1),
-            size_hint=(1, 0.5)
-        )
-        connect_button.bind(on_press=self.on_connect_press)
-        clientBox.add_widget(connect_button)
-        clientBox.add_widget(self.code_input)
+        layout.add_widget(self.code_input)
+        layout.add_widget(connect_btn)
+        layout.add_widget(host_btn)
+        layout.add_widget(Label(text=HELP_TEXT, font_size='14sp'))
 
-        buttonsBox.add_widget(btnHost)
-        buttonsBox.add_widget(clientBox)
-
-        self.homeText = Label(text="Do you want to host (server) or connect as a client?",
-                            font_size="18sp")
-
-        mainBox.add_widget(self.homeText)
-        mainBox.add_widget(buttonsBox)
-
-        self.add_widget(mainBox)
-
-    def go_to_server(self, instance):
-        """Navigate to server screen"""
-        self.manager.current = 'server'
-
-    def on_connect_press(self, instance):
-        """Handle client connection attempt"""
-        # Get the code as host (IP address) for client connection
-        host = self.code_input.text.strip()
-        try:
-            with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as client_socket:
-                client_socket.connect((host, PORT))
-                client_socket.sendall("give me".encode())
-                data = client_socket.recv(1024)
-                number = data.decode()
-                print("Received number:", number)
-            
-            # Switch to GameScreen and pass the number and connection details
-            game_screen = self.manager.get_screen('game')
-            game_screen.set_number(number)
-            game_screen.set_connection(host, PORT)
-            self.manager.current = 'game'
-        
-        except OSError as e:
-            print(f"Error: {e}. Check the IP or network.")
-            self.homeText.text = f"Error: {e}. Check the IP or network."
-
-class ServerScreen(Screen):
-    """Screen for server management and auto-client connection"""
-    def __init__(self, **kwargs):
-        super(ServerScreen, self).__init__(**kwargs)
-        self.server_thread = None
-
-        layout = BoxLayout(orientation='vertical')
-        self.info_label = Label(text="Press 'Start Server' to begin hosting", font_size="18sp")
-        start_button = Button(text="Start Server", font_size="20sp", background_color=(0, 0, 1, 1))
-        start_button.bind(on_press=self.start_server_thread)
-
-        back_button = Button(text="Back to Home", font_size="18sp", background_color=(0.5, 0.5, 0.5, 1))
-        back_button.bind(on_press=self.go_back)
-
-        layout.add_widget(self.info_label)
-        layout.add_widget(start_button)
-        layout.add_widget(back_button)
         self.add_widget(layout)
 
-    def start_server_thread(self, instance):
-        """Start the server in a separate thread"""
-        code = find_code()
-        self.info_label.text = f"Server started!\nConnect code: {code}\nListening on port {PORT}"
-        if not self.server_thread or not self.server_thread.is_alive():
-            self.server_thread = threading.Thread(target=start_server, daemon=True)
-            self.server_thread.start()
-        else:
-            self.info_label.text = "Server already running."
-        # Auto-connect as client after a short delay
-        Clock.schedule_once(self.auto_connect_client, 1)
-
-    def auto_connect_client(self, dt):
-        """Automatically connect to local server as client"""
+    def connect_to_server(self, instance):
+        host = self.code_input.text.strip()
         try:
-            with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as client_socket:
-                client_socket.connect((f"{find_code()}", PORT))
-                client_socket.sendall("give me".encode())
-                data = client_socket.recv(1024)
+            with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+                s.connect((host, PORT))
+                s.sendall("give me".encode())
+                data = s.recv(1024)
                 number = data.decode()
-                print("Auto-connected; received number:", number)
-            game_screen = self.manager.get_screen('game')
-            game_screen.set_number(number)
-            game_screen.set_connection(f"{find_code()}", PORT)
-            self.manager.current = 'game'
+                self.manager.get_screen('game').set_number(number, host)
+                self.manager.current = 'game'
         except Exception as e:
-            self.info_label.text = f"Auto-connect failed: {e}"
+            print("Error connecting:", e)
 
-    def go_back(self, instance):
-        """Return to home screen"""
-        self.manager.current = 'home'
+    def start_host(self, instance):
+        threading.Thread(target=start_server, daemon=True).start()
+        Clock.schedule_once(lambda dt: self.auto_connect_client(), 1)
+
+    def auto_connect_client(self):
+        host = find_code()
+        try:
+            with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+                s.connect((host, PORT))
+                s.sendall("give me".encode())
+                number = s.recv(1024).decode()
+                self.manager.get_screen('game').set_number(number, host)
+                self.manager.current = 'game'
+        except Exception as e:
+            print("Auto-connect failed:", e)
 
 class GameScreen(Screen):
-    """Screen for gameplay after connection is established"""
     def __init__(self, **kwargs):
-        super(GameScreen, self).__init__(**kwargs)
-        self.number = None
-        self.host = None
-        self.port = None
+        super().__init__(**kwargs)
+        self.number = ""
+        self.host = ""
 
-        self.layout = BoxLayout(orientation='vertical')
-        self.layout.clear_widgets()
-        self.number_label = Label(text="Your number: ", font_size="30sp")
-        self.status_label = Label(text="Game in progress...", font_size="20sp")
-        self.show_button = Button(
-            text="SHOW",
-            font_size="25sp",
-            background_color=(0, 1, 0, 1),
-            size_hint=(1, 0.3)
-        )
-        self.show_button.bind(on_press=self.on_show_press)
-        self.back_button = Button(
-            text="Back to Home",
-            font_size="18sp",
-            background_color=(0.5, 0.5, 0.5, 1),
-            size_hint=(1, 0.2)
-        )
-        self.back_button.bind(on_press=self.go_back)
+        self.layout = BoxLayout(orientation='vertical', padding=20, spacing=10)
+        self.number_label = Label(text="Your number: ", font_size='24sp')
+        self.status_label = Label(text="Game in progress...", font_size='18sp')
+        self.show_button = Button(text="SHOW", on_press=self.show_number)
 
         self.layout.add_widget(self.number_label)
         self.layout.add_widget(self.status_label)
-        # self.layout.add_widget(self.show_button)
-        self.layout.add_widget(self.back_button)
+        self.layout.add_widget(self.show_button)
         self.add_widget(self.layout)
 
-    def set_number(self, number):
-        """Set the player's number"""
+    def set_number(self, number, host):
         self.number = number
-        self.number_label.text = f"Your number: {self.number}"
-
-    def set_connection(self, host, port):
-        """Set connection details and display IP"""
         self.host = host
-        self.port = port
-        self.ipLabel = Label(text=f"code:{self.host}")
-        self.layout.add_widget(self.ipLabel)
+        self.number_label.text = f"Your number: {number}"
+        self.status_label.text = "Game in progress..."
 
-    def on_show_press(self, instance):
-        """Handle show button press - reveal number to server"""
+    def show_number(self, instance):
         try:
-            with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as client_socket:
-                client_socket.connect((self.host, self.port))
-                client_socket.sendall("I showed".encode())
-                data = client_socket.recv(1024)
-                response = data.decode()
-                self.status_label.text = f"Result: {response}"
+            with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+                s.connect((self.host, PORT))
+                s.sendall("I showed".encode())
+                result = s.recv(1024).decode()
+                self.status_label.text = result
         except Exception as e:
             self.status_label.text = f"Error: {e}"
 
-    def go_back(self, instance):
-        """Return to home screen"""
-        self.manager.current = 'home'
-
-class HomeApp(App):
-    """Main application class"""
+class TheMindApp(App):
     def build(self):
-        # Create the screen manager and add screens
         sm = ScreenManager()
         sm.add_widget(HomeScreen(name='home'))
-        sm.add_widget(ServerScreen(name='server'))
         sm.add_widget(GameScreen(name='game'))
         return sm
 
-if __name__ == "__main__":
-    HomeApp().run()
+if __name__ == '__main__':
+    TheMindApp().run()
